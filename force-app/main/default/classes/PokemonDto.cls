@@ -1,18 +1,18 @@
-public class PokemonDTO {
+public with sharing class PokemonDto {
 
     @AuraEnabled
-    public Integer id { get; set; }  // Identificador del Pokémon
+    public Integer id { get; set; }
 
     @AuraEnabled
-    public String name { get; set; }  // Nombre del Pokémon
+    public String name { get; set; }
 
     @AuraEnabled
-    public String image { get; set; } // URL de la imagen del Pokémon
+    public String logo { get; set; }
 
     @AuraEnabled
-    public String type { get; set; }  // Tipo de Pokémon (si lo deseas agregar)
-    
+    public String type { get; set; }
+
     @AuraEnabled
-    public String location { get; set; } // Información sobre la ubicación (si aplica)
+    public String imgCard { get; set; }
 
 }

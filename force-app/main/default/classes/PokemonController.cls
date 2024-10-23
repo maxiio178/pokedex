@@ -1,21 +1,20 @@
 public with sharing class PokemonController {
 
-    // Método para exponer la lista de Pokémon a los LWC
+    // List Pokemons
     @AuraEnabled(cacheable=true)
-    public static List<PokemonDTO> fetchPokemonList() {
+    public static List<PokemonDto> fetchPokemonList() {
         try {
-            // Llamar al método del servicio que obtiene los Pokémon
-            return PokeAPIService.getPokemonList();
+            return PokemonCalloutsService.getPokemonList();
         } catch (Exception ex) {
             throw new AuraHandledException('Error fetching Pokémon: ' + ex.getMessage());
         }
     }
 
-    // Método para obtener un Pokémon filtrado por nombre
+    // Pokemons by name
     @AuraEnabled(cacheable=true)
-    public static PokemonDTO fetchPokemonByName(String name) {
-        List<PokemonDTO> pokemons = PokeAPIService.getPokemonList();
-        for (PokemonDTO pokemon : pokemons) {
+    public static PokemonDto fetchPokemonByName(String name) {
+        List<PokemonDto> pokemons = PokemonCalloutsService.getPokemonList();
+        for (PokemonDto pokemon : pokemons) {
             if (pokemon.name.equalsIgnoreCase(name)) {
                 return pokemon;
             }
@@ -23,13 +22,13 @@ public with sharing class PokemonController {
         return null;
     }
 
-    // Método para filtrar los Pokémon por tipo
+    //  Filter by Type
     @AuraEnabled(cacheable=true)
-    public static List<PokemonDTO> filterPokemonsByType(String type) {
-        List<PokemonDTO> allPokemons = PokeAPIService.getPokemonList();
-        List<PokemonDTO> filteredPokemons = new List<PokemonDTO>();
+    public static List<PokemonDto> filterPokemonsByType(String type) {
+        List<PokemonDto> allPokemons = PokeAPIService.getPokemonList();
+        List<PokemonDto> filteredPokemons = new List<PokemonDTO>();
 
-        for (PokemonDTO pokemon : allPokemons) {
+        for (PokemonDto pokemon : allPokemons) {
             if (pokemon.type == type) {
                 filteredPokemons.add(pokemon);
             }

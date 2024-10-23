@@ -1,3 +1,10 @@
 <template>
-    
+    <div class="carousel-container">
+        <template for:each={pokemons} for:item="pokemon">
+            <div key={pokemon.id} class="pokemon-item" data-id={pokemon.id} onclick={handleSelectPokemon}>
+                <img src={pokemon.logo} alt={pokemon.name} class="pokemon-logo"/>
+                <p>{pokemon.name}</p>
+            </div>
+        </template>
+    </div>
 </template>

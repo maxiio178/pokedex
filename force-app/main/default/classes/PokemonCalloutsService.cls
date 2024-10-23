@@ -1,55 +1,63 @@
 public with sharing class PokemonCalloutsService {
 
-        // Método para obtener la lista de Pokémon desde la PokeAPI
-        @AuraEnabled(cacheable=true)
-        public static List<PokemonDTO> getPokemonList() {
-            String url = 'https://pokeapi.co/api/v2/pokemon?limit=100';
-            Http http = new Http();
-            HttpRequest request = new HttpRequest();
-            request.setEndpoint(url);
-            request.setMethod('GET');
+    public static List<PokemonDTO> getPokemonList() {
+        List<PokemonDTO> pokemonList = new List<PokemonDTO>();
+            
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint('https://pokeapi.co/api/v2/pokemon?limit=151');
+        request.setMethod('GET');
     
-            HttpResponse response = http.send(request);
-            if (response.getStatusCode() == 200) {
-                Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
-                List<Object> pokemonResults = (List<Object>) results.get('results');
+        HttpResponse response = http.send(request);
+        if (response.getStatusCode() == 200) {
+
+            Map<String, Object> data = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+            List<Object> results = (List<Object>) data.get('results');
     
-                List<PokemonDTO> pokemons = new List<PokemonDTO>();
-                Integer count = 1;
-                for (Object obj : pokemonResults) {
-                    Map<String, Object> pokemonData = (Map<String, Object>) obj;
-                    String name = (String) pokemonData.get('name');
-                    String detailsUrl = (String) pokemonData.get('url');
-    
-                    PokemonDTO pokemon = new PokemonDTO();
-                    pokemon.id = count++;
-                    pokemon.name = name;
-                    pokemon.image = getPokemonImage(detailsUrl); // Obtener la imagen del Pokémon
-                    pokemons.add(pokemon);
+
+            for (Object obj : results) {
+                Map<String, Object> pokemonData = (Map<String, Object>) obj;
+                String url = (String) pokemonData.get('url');
+
+
+                PokemonDto details = getPokemonDetails(url);
+                if (details != null) {
+                    pokemonList.add(details);
                 }
-                return pokemons;
-            } else {
-                throw new AuraHandledException('Error retrieving Pokémon list');
             }
-        }
+            
+            return pokemonList; 
+    }
+
+    @Future(callout=true)
+    public static PokemonDto getPokemonDetails(String url) {
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint(url);
+        request.setMethod('GET');
     
-        // Método auxiliar para obtener la imagen del Pokémon
-        @Future(callout=true)
-        public static String getPokemonImage(String detailsUrl) {
-            Http http = new Http();
-            HttpRequest request = new HttpRequest();
-            request.setEndpoint(detailsUrl);
-            request.setMethod('GET');
-    
-            HttpResponse response = http.send(request);
+        HttpResponse response = http.send(request);
             if (response.getStatusCode() == 200) {
-                Map<String, Object> pokemonDetails = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
-                Map<String, Object> sprites = (Map<String, Object>) pokemonDetails.get('sprites');
-                return (String) sprites.get('front_default');
+            Map<String, Object> data = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+            PokemonDto dto = new PokemonDto();
+    
+            dto.id = (Integer) data.get('id');
+            dto.name = (String) data.get('name');
+            dto.logo = (String) ((Map<String, Object>) data.get('sprites')).get('front_default');
+            dto.imgCard = (String) ((Map<String, Object>) data.get('sprites').get('other').get('official-artwork')).get('front_default');
+            dto.types = (List<Object>) data.get('types');
+    
+    
+        List<String> typeList = new List<String>();
+            for (Object typeObj : dto.types) {
+                Map<String, Object> typeMap = (Map<String, Object>) typeObj;
+                typeList.add((String) ((Map<String, Object>) typeMap.get('type')).get('name'));
             }
+            dto.types = typeList;
+    
+            return dto;
+        }
             return null;
         }
-    
-    
-    
+    }
 }
