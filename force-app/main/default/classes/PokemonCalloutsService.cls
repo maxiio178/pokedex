@@ -27,10 +27,10 @@ public with sharing class PokemonCalloutsService {
             }
             
             return pokemonList; 
+        }
     }
 
-    @Future(callout=true)
-    public static PokemonDto getPokemonDetails(String url) {
+    private static PokemonDto getPokemonDetails(String url) {
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         request.setEndpoint(url);
@@ -44,8 +44,8 @@ public with sharing class PokemonCalloutsService {
             dto.id = (Integer) data.get('id');
             dto.name = (String) data.get('name');
             dto.logo = (String) ((Map<String, Object>) data.get('sprites')).get('front_default');
-            dto.imgCard = (String) ((Map<String, Object>) data.get('sprites').get('other').get('official-artwork')).get('front_default');
-            dto.types = (List<Object>) data.get('types');
+            dto.imgCard = (String) ((Map<String, Object>) ((Map<String, Object>) ((Map<String, Object>) data.get('sprites')).get('other')).get('official-artwork')).get('front_default');
+            dto.types = (List<String>) data.get('types');
     
     
         List<String> typeList = new List<String>();
@@ -58,6 +58,5 @@ public with sharing class PokemonCalloutsService {
             return dto;
         }
             return null;
-        }
     }
 }

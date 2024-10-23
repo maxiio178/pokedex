@@ -25,11 +25,11 @@ public with sharing class PokemonController {
     //  Filter by Type
     @AuraEnabled(cacheable=true)
     public static List<PokemonDto> filterPokemonsByType(String type) {
-        List<PokemonDto> allPokemons = PokeAPIService.getPokemonList();
+        List<PokemonDto> allPokemons = PokemonCalloutsService.getPokemonList();
         List<PokemonDto> filteredPokemons = new List<PokemonDTO>();
 
         for (PokemonDto pokemon : allPokemons) {
-            if (pokemon.type == type) {
+            if (pokemon.types.contains(Type)) {
                 filteredPokemons.add(pokemon);
             }
         }

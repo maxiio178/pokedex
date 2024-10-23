@@ -10,7 +10,7 @@ public with sharing class PokemonDto {
     public String logo { get; set; }
 
     @AuraEnabled
-    public String type { get; set; }
+    public List<String> types { get; set; }
 
     @AuraEnabled
     public String imgCard { get; set; }
