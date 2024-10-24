@@ -2,7 +2,7 @@ public with sharing class PokeFiterControler {
     //  Filter by Type
     @AuraEnabled(cacheable=true)
     public static List<Pokemons> filterPokemonsByType(List<String> types) {
-        List<Pokemons> allPokemons = PokeServCallOut.getPokemonList();
+        List<Pokemons> allPokemons = PokeServCallOut.PokeServ();
         List<Pokemons> filteredPokemons = new List<Pokemons>();
         for (Pokemons pokemon : allPokemons) {
             Boolean hasMatchingType = false;

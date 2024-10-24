@@ -2,10 +2,10 @@ public with sharing class PokeSaechController {
     // Pokemon by Name
     @AuraEnabled(cacheable=true)
     public static Pokemons fetchPokemonByName(String name) {
-        List<Pokemons> pokemons = PokeServCallOut.getPokemonList();
+        List<Pokemons> pokemons = PokeServCallOut.PokeServ();
         for (Pokemons pokemos : pokemons) {
-            if (pokemon.name.equalsIgnoreCase(name)) {
-                return pokemon;
+            if (pokemos.name.equalsIgnoreCase(name)) {
+                return pokemos;
             }
         }
         return null;
