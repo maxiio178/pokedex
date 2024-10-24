@@ -1,0 +1,8 @@
+<template>
+    <div class="pokemon-app">
+        <input type="text" placeholder="Search Pokémon..." oninput={handleSearch} />
+        <pokemon-filter-buttons types={types} onfilterbytype={handleFilterByType}></pokemon-filter-buttons>
+        <pokemon-card pokemon={selectedPokemon}></pokemon-card>
+        <pokemon-carousel pokemons={filteredPokemons} onselectpokemon={handlePokemonSelect}></pokemon-carousel>
+    </div>
+</template>

@@ -1,0 +1,9 @@
+<template>
+    <div class="filter-buttons">
+        <template for:each={types} for:item="type">
+            <button key={type} class="filter-button" data-type={type} onclick={handleFilterClick}>
+                {type}
+            </button>
+        </template>
+    </div>
+</template>
